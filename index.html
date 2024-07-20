@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Personal Trainer - v1.04</title> <!-- Changed header text to indicate difference -->
+    <title>AI Personal Trainer - v1.05</title> <!-- Changed header text to indicate difference -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -64,7 +64,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>AI Personal Trainer - v1.04</h1> <!-- Changed header text to indicate difference -->
+        <h1>AI Personal Trainer - v1.05</h1> <!-- Changed header text to indicate difference -->
         <p>Chat with your AI fitness coach for workout advice, tips, and personalized fitness plans!</p>
         <div>
             <input type="text" id="userMessage" placeholder="Enter your message">
@@ -75,7 +75,7 @@
 
     <script>
         const apiKey = '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'; // Your Hugging Face API key
-        const endpoint = 'https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill'; // Free model endpoint
+        const endpoint = 'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2'; // Free model endpoint
         const systemPrompt = `You are a fitness assistant. Answer as briefly as possible.`;
         const maxRetries = 5;
         const retryDelay = 5000; // 5 seconds
