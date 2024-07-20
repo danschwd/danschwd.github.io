@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Personal Trainer - v2.7</title> <!-- Changed header text to indicate difference -->
+    <title>AI Personal Trainer - v2.8</title> <!-- Changed header text to indicate difference -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -88,7 +88,7 @@
 </head>
 <body>
     <div class="container" id="homeScreen" class="screen">
-        <h1>AI Personal Trainer - v2.7</h1>
+        <h1>AI Personal Trainer - v2.8</h1>
         <button onclick="showScreen('chatScreen')">Start Chat</button>
         <button onclick="showScreen('workoutsScreen')">My Workouts</button>
         <button onclick="showScreen('nutritionScreen')">Nutrition Advice</button>
@@ -127,99 +127,136 @@
         <p>Settings options...</p>
         <button onclick="showScreen('homeScreen')">Back to Home</button>
     </div>
-
-    <script>
-        function showScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.style.display = 'none';
-            });
-            document.getElementById(screenId).style.display = 'block';
-        }
-
-        const apiKey = 'AoCm86fzgwt3KDA9ynp7LHhthLFixBH0f2T3ni8V'; // Your Cohere API key
-        const endpoint = 'https://api.cohere.ai/generate'; // Cohere generate endpoint
-        const preamble = `You are an extremely friendly and knowledgeable fitness assistant, dedicated to helping users achieve their fitness goals. You engage with users in any language, ensuring accessibility for everyone. With PhD-level expertise in fitness, health, wellness, and nutrition, you provide accurate and reliable advice. You start every conversation as if you are engaging with a client, eager to help and support their journey towards better health. All information you provide should be easy to understand for a lay audience. You communicate in a friendly tone and always offer the best possible response with the given information. Please generate detailed workout plans when asked.`;
-
-        let chatHistory = [];
-        const maxHistoryLength = 5; // Adjust this number as needed
-
-        async function sendMessage() {
-            const userMessage = document.getElementById('userMessage').value;
-            const sendButton = document.getElementById('sendButton');
-            const chatHistoryDiv = document.getElementById('chatHistory');
-
-            if (!userMessage.trim()) {
-                alert("Please enter a message.");
-                return;
-            }
-
-            chatHistory.push(`User: ${userMessage}`);
-            chatHistoryDiv.innerHTML += `<p><strong>You:</strong> ${userMessage}</p><span class="loader"></span>`;
-
-            if (chatHistory.length > maxHistoryLength) {
-                chatHistory.shift(); // Remove the oldest message to maintain the history length
-            }
-
-            sendButton.disabled = true;
-
-            const payload = {
-                model: 'command-xlarge-nightly',
-                prompt: `${preamble}\n\n${chatHistory.join('\n')}\nAssistant:`,
-                max_tokens: 300, // Adjust token count as needed
-                temperature: 0.7,
-                k: 0,
-                p: 0.75,
-                stop_sequences: ["\n"]
-            };
-
-            console.log('Request payload:', payload);
-
-            try {
-                let generatedText = '';
-                let responseComplete = false;
-
-                while (!responseComplete) {
-                    const response = await fetch(endpoint, {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${apiKey}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(payload)
-                    });
-
-                    console.log('Response status:', response.status);
-                    console.log('Response headers:', [...response.headers.entries()]);
-
-                    const data = await response.json();
-                    console.log('Response data:', data);
-
-                    if (!response.ok) {
-                        throw new Error(`Network response was not ok: ${response.statusText}, Details: ${JSON.stringify(data)}`);
-                    }
-
-                    generatedText += data.text || '';
-                    console.log('Generated text:', generatedText);
-
-                    if (data.text && data.text.length < 300) {
-                        responseComplete = true;
-                    } else {
-                        payload.prompt = `${preamble}\n\n${chatHistory.join('\n')}\nAssistant (continued):`;
-                    }
-                }
-
-                chatHistory.push(`Assistant: ${generatedText.trim()}`);
-                chatHistoryDiv.querySelector('.loader').remove();
-                chatHistoryDiv.innerHTML += `<p><strong>AI:</strong> ${generatedText.trim()}</p>`;
-            } catch (error) {
-                chatHistoryDiv.querySelector('.loader').remove();
-                chatHistoryDiv.innerHTML += `<p><strong>Error:</strong> ${error.message}</p>`;
-                console.error('Error details:', error);
-            } finally {
-                sendButton.disabled = false;
-                chatHistoryDiv.scrollTop = chatHistoryDiv.scrollHeight;
-            }
-        }
-    </script>
 </body>
 </html>
+<script>
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(screen => {
+            screen.style.display = 'none';
+        });
+        document.getElementById(screenId).style.display = 'block';
+    }
+
+    const apiKey = 'AoCm86fzgwt3KDA9ynp7LHhthLFixBH0f2T3ni8V'; // Your Cohere API key
+    const endpoint = 'https://api.cohere.ai/generate'; // Cohere generate endpoint
+    const preamble = `You are an extremely friendly and knowledgeable fitness assistant, dedicated to helping users achieve their fitness goals. You engage with users in any language, ensuring accessibility for everyone. With PhD-level expertise in fitness, health, wellness, and nutrition, you provide accurate and reliable advice. You start every conversation as if you are engaging with a client, eager to help and support their journey towards better health. All information you provide should be easy to understand for a lay audience. You communicate in a friendly tone and always offer the best possible response with the given information. Please generate detailed workout plans when asked.`;
+
+    let chatHistory = [];
+    const maxHistoryLength = 5; // Adjust this number as needed
+
+    async function sendMessage() {
+        const userMessage = document.getElementById('userMessage').value;
+        const sendButton = document.getElementById('sendButton');
+        const chatHistoryDiv = document.getElementById('chatHistory');
+
+        if (!userMessage.trim()) {
+            alert("Please enter a message.");
+            return;
+        }
+
+        chatHistory.push(`User: ${userMessage}`);
+        chatHistoryDiv.innerHTML += `<p><strong>You:</strong> ${userMessage}</p><span class="loader"></span>`;
+
+        if (chatHistory.length > maxHistoryLength) {
+            chatHistory.shift(); // Remove the oldest message to maintain the history length
+        }
+
+        sendButton.disabled = true;
+
+        const payload = {
+            model: 'command-xlarge-nightly',
+            prompt: `${preamble}\n\n${chatHistory.join('\n')}\nAssistant:`,
+            max_tokens: 300, // Adjust token count as needed
+            temperature: 0.7,
+            k: 0,
+            p: 0.75,
+            stop_sequences: ["\n"]
+        };
+
+        console.log('Request payload:', payload);
+
+        try {
+            let generatedText = '';
+            let responseComplete = false;
+
+            while (!responseComplete) {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                console.log('Response status:', response.status);
+                console.log('Response headers:', [...response.headers.entries()]);
+
+                const data = await response.json();
+                console.log('Response data:', data);
+
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.statusText}, Details: ${JSON.stringify(data)}`);
+                }
+
+                generatedText += data.text || '';
+                console.log('Generated text:', generatedText);
+
+                if (data.text && data.text.length < 300) {
+                    responseComplete = true;
+                } else {
+                    payload.prompt = `${preamble}\n\n${chatHistory.join('\n')}\nAssistant (continued):`;
+                }
+            }
+
+            chatHistory.push(`Assistant: ${generatedText.trim()}`);
+            chatHistoryDiv.querySelector('.loader').remove();
+            chatHistoryDiv.innerHTML += `<p><strong>AI:</strong> ${generatedText.trim()}</p>`;
+
+            // Check if AI needs to ask follow-up questions
+            if (generatedText.includes("I'd like to ask you a few questions")) {
+                sendFollowUpQuestions();
+            }
+        } catch (error) {
+            chatHistoryDiv.querySelector('.loader').remove();
+            chatHistoryDiv.innerHTML += `<p><strong>Error:</strong> ${error.message}</p>`;
+            console.error('Error details:', error);
+        } finally {
+            sendButton.disabled = false;
+            chatHistoryDiv.scrollTop = chatHistoryDiv.scrollHeight;
+        }
+    }
+
+    async function sendFollowUpQuestions() {
+        const chatHistoryDiv = document.getElementById('chatHistory');
+        const followUpPayload = {
+            model: 'command-xlarge-nightly',
+            prompt: `${chatHistory.join('\n')}\nAssistant: Can you tell me your current fitness level, any specific goals you have, and if you have any limitations or injuries?`,
+            max_tokens: 300,
+            temperature: 0.7,
+            k: 0,
+            p: 0.75,
+            stop_sequences: ["\n"]
+        };
+
+        try {
+            const followUpResponse = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(followUpPayload)
+            });
+
+            const followUpData = await followUpResponse.json();
+            const followUpText = followUpData.text || 'No response text';
+
+            chatHistory.push(`Assistant: ${followUpText.trim()}`);
+            chatHistoryDiv.innerHTML += `<p><strong>AI:</strong> ${followUpText.trim()}</p>`;
+        } catch (error) {
+            chatHistoryDiv.innerHTML += `<p><strong>Error:</strong> ${error.message}</p>`;
+            console.error('Error details:', error);
+        }
+    }
+</script>
