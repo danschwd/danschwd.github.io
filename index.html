@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Personal Trainer - v1.07</title> <!-- Changed header text to indicate difference -->
+    <title>AI Personal Trainer - v1.08</title> <!-- Changed header text to indicate difference -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -64,7 +64,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>AI Personal Trainer - v1.07</h1> <!-- Changed header text to indicate difference -->
+        <h1>AI Personal Trainer - v1.08</h1> <!-- Changed header text to indicate difference -->
         <p>Chat with your AI fitness coach for workout advice, tips, and personalized fitness plans!</p>
         <div>
             <input type="text" id="userMessage" placeholder="Enter your message">
@@ -112,7 +112,7 @@
                 });
 
                 console.log('Response status:', response.status);
-                console.log('Response headers:', response.headers);
+                console.log('Response headers:', [...response.headers.entries()]);
 
                 const data = await response.json();
                 console.log('Response data:', data);
@@ -132,9 +132,13 @@
                 console.error('Error details:', error);
             } finally {
                 sendButton.disabled = false;
-                responseDiv.querySelector('.loader')?.remove();
+                const loader = responseDiv.querySelector('.loader');
+                if (loader) {
+                    loader.remove();
+                }
             }
         }
     </script>
 </body>
 </html>
+
