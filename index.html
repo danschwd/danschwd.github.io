@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Personal Trainer - v1.28</title> <!-- Changed header text to indicate difference -->
+    <title>AI Personal Trainer - v1.29</title> <!-- Changed header text to indicate difference -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -93,7 +93,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>AI Personal Trainer - v1.28</h1> <!-- Changed header text to indicate difference -->
+        <h1>AI Personal Trainer - v1.29</h1> <!-- Changed header text to indicate difference -->
         <p>Chat with your AI fitness coach for workout advice, tips, and personalized fitness plans!</p>
         <input type="text" id="userMessage" placeholder="Enter your message">
         <button id="sendButton" onclick="sendMessage()">Send</button>
@@ -119,7 +119,7 @@
             responseDiv.innerHTML = '<span class="loader"></span>';
 
             const payload = {
-                model: 'xlarge',
+                model: 'command-xlarge-nightly',
                 prompt: `${preamble}\n\nUser: ${userMessage}\nAssistant:`,
                 max_tokens: 300, // Adjust token count as needed
                 temperature: 0.7,
