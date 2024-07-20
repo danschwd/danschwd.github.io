@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Personal Trainer - v1.30</title> <!-- Changed header text to indicate difference -->
+    <title>AI Personal Trainer - v2.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -30,19 +30,6 @@
             margin-bottom: 20px;
             color: #333;
         }
-        p {
-            margin-bottom: 20px;
-            color: #666;
-        }
-        input {
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
         button {
             width: 100%;
             padding: 15px;
@@ -62,6 +49,12 @@
         button:disabled {
             background-color: #ccc;
             cursor: not-allowed;
+        }
+        .screen {
+            display: none;
+        }
+        #homeScreen {
+            display: block;
         }
         #response {
             margin-top: 20px;
@@ -92,15 +85,55 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>AI Personal Trainer - v1.30</h1> <!-- Changed header text to indicate difference -->
-        <p>Chat with your AI fitness coach for workout advice, tips, and personalized fitness plans!</p>
+    <div class="container" id="homeScreen" class="screen">
+        <h1>AI Personal Trainer - v2.0</h1>
+        <button onclick="showScreen('chatScreen')">Start Chat</button>
+        <button onclick="showScreen('workoutsScreen')">My Workouts</button>
+        <button onclick="showScreen('nutritionScreen')">Nutrition Advice</button>
+        <button onclick="showScreen('progressScreen')">Progress Tracker</button>
+        <button onclick="showScreen('settingsScreen')">Settings</button>
+    </div>
+
+    <div class="container screen" id="chatScreen">
+        <h1>Chat with Your AI Trainer</h1>
         <input type="text" id="userMessage" placeholder="Enter your message">
         <button id="sendButton" onclick="sendMessage()">Send</button>
         <div id="response"></div>
+        <button onclick="showScreen('homeScreen')">Back to Home</button>
+    </div>
+
+    <div class="container screen" id="workoutsScreen">
+        <h1>My Workouts</h1>
+        <p>List of workouts...</p>
+        <button onclick="showScreen('homeScreen')">Back to Home</button>
+    </div>
+
+    <div class="container screen" id="nutritionScreen">
+        <h1>Nutrition Advice</h1>
+        <p>Nutrition information...</p>
+        <button onclick="showScreen('homeScreen')">Back to Home</button>
+    </div>
+
+    <div class="container screen" id="progressScreen">
+        <h1>Progress Tracker</h1>
+        <p>Progress graphs...</p>
+        <button onclick="showScreen('homeScreen')">Back to Home</button>
+    </div>
+
+    <div class="container screen" id="settingsScreen">
+        <h1>Settings</h1>
+        <p>Settings options...</p>
+        <button onclick="showScreen('homeScreen')">Back to Home</button>
     </div>
 
     <script>
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.style.display = 'none';
+            });
+            document.getElementById(screenId).style.display = 'block';
+        }
+
         const apiKey = 'AoCm86fzgwt3KDA9ynp7LHhthLFixBH0f2T3ni8V'; // Your Cohere API key
         const endpoint = 'https://api.cohere.ai/generate'; // Cohere generate endpoint
         const preamble = `You are an extremely friendly and knowledgeable fitness assistant, dedicated to helping users achieve their fitness goals. You engage with users in any language, ensuring accessibility for everyone. With PhD-level expertise in fitness, health, wellness, and nutrition, you provide accurate and reliable advice. You start every conversation as if you are engaging with a client, eager to help and support their journey towards better health. All information you provide should be easy to understand for a lay audience. You communicate in a friendly tone and always offer the best possible response with the given information.`;
