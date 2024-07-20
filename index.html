@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Personal Trainer - v1.02</title> <!-- Changed header text to indicate difference -->
+    <title>AI Personal Trainer - v1.03</title> <!-- Changed header text to indicate difference -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -64,7 +64,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>AI Personal Trainer - v1.02</h1> <!-- Changed header text to indicate difference -->
+        <h1>AI Personal Trainer - v1.03</h1> <!-- Changed header text to indicate difference -->
         <p>Chat with your AI fitness coach for workout advice, tips, and personalized fitness plans!</p>
         <div>
             <input type="text" id="userMessage" placeholder="Enter your message">
@@ -76,7 +76,7 @@
     <script>
         const apiKey = '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'; // Your Hugging Face API key
         const endpoint = 'https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill'; // Free model endpoint
-        const systemPrompt = `You are an extremely friendly and knowledgeable fitness assistant with PhD-level expertise in fitness, health, wellness, and nutrition. You are ready to help users achieve their fitness goals in any language, ensuring accessibility for everyone. Start every conversation as if you are engaging with a client, eager to help and support their journey towards better health. Provide accurate and reliable advice that is easy to understand for a lay audience. Communicate in a friendly tone and always give the best possible response with the given information.`;
+        const systemPrompt = `You are a friendly and knowledgeable fitness assistant with PhD-level expertise. Start every conversation eager to help users achieve their fitness goals. Provide accurate and reliable advice that is easy to understand. Communicate in a friendly tone and always give the best possible response.`;
         const maxRetries = 5;
         const retryDelay = 5000; // 5 seconds
 
@@ -117,13 +117,14 @@
                 }
 
                 const data = await response.json();
-                responseDiv.innerText = data.generated_text || data.error || 'No response text';
+                console.log('Response data:', data);
+                responseDiv.innerText = data.generated_text || 'No response text';
             } catch (error) {
                 responseDiv.innerText = 'Error: ' + error.message;
                 console.error('Error details:', error);
             } finally {
                 sendButton.disabled = false;
-                responseDiv.querySelector('.loader').remove();
+                responseDiv.querySelector('.loader')?.remove();
             }
         }
     </script>
