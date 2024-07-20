@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Personal Trainer - v2.1</title> <!-- Changed header text to indicate difference -->
+    <title>AI Personal Trainer - v2.3</title> <!-- Changed header text to indicate difference -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -88,7 +88,7 @@
 </head>
 <body>
     <div class="container" id="homeScreen" class="screen">
-        <h1>AI Personal Trainer - v2.1</h1>
+        <h1>AI Personal Trainer - v2.3</h1>
         <button onclick="showScreen('chatScreen')">Start Chat</button>
         <button onclick="showScreen('workoutsScreen')">My Workouts</button>
         <button onclick="showScreen('nutritionScreen')">Nutrition Advice</button>
@@ -140,22 +140,31 @@
         const endpoint = 'https://api.cohere.ai/generate'; // Cohere generate endpoint
         const preamble = `You are an extremely friendly and knowledgeable fitness assistant, dedicated to helping users achieve their fitness goals. You engage with users in any language, ensuring accessibility for everyone. With PhD-level expertise in fitness, health, wellness, and nutrition, you provide accurate and reliable advice. You start every conversation as if you are engaging with a client, eager to help and support their journey towards better health. All information you provide should be easy to understand for a lay audience. You communicate in a friendly tone and always offer the best possible response with the given information.`;
 
+        let chatHistory = [];
+        const maxHistoryLength = 5; // Adjust this number as needed
+
         async function sendMessage() {
             const userMessage = document.getElementById('userMessage').value;
             const sendButton = document.getElementById('sendButton');
-            const chatHistory = document.getElementById('chatHistory');
+            const chatHistoryDiv = document.getElementById('chatHistory');
 
             if (!userMessage.trim()) {
                 alert("Please enter a message.");
                 return;
             }
 
+            chatHistory.push(`User: ${userMessage}`);
+            chatHistoryDiv.innerHTML += `<p><strong>You:</strong> ${userMessage}</p><span class="loader"></span>`;
+
+            if (chatHistory.length > maxHistoryLength) {
+                chatHistory.shift(); // Remove the oldest message to maintain the history length
+            }
+
             sendButton.disabled = true;
-            chatHistory.innerHTML += `<p><strong>You:</strong> ${userMessage}</p><span class="loader"></span>`;
 
             const payload = {
                 model: 'command-xlarge-nightly',
-                prompt: `${preamble}\n\nUser: ${userMessage}\nAssistant:`,
+                prompt: `${preamble}\n\n${chatHistory.join('\n')}\nAssistant:`,
                 max_tokens: 300, // Adjust token count as needed
                 temperature: 0.7,
                 k: 0,
@@ -188,15 +197,16 @@
                 const generatedText = data.text || 'No response text';
                 console.log('Generated text:', generatedText);
 
-                chatHistory.querySelector('.loader').remove();
-                chatHistory.innerHTML += `<p><strong>AI:</strong> ${generatedText.trim()}</p>`;
+                chatHistory.push(`Assistant: ${generatedText.trim()}`);
+                chatHistoryDiv.querySelector('.loader').remove();
+                chatHistoryDiv.innerHTML += `<p><strong>AI:</strong> ${generatedText.trim()}</p>`;
             } catch (error) {
-                chatHistory.querySelector('.loader').remove();
-                chatHistory.innerHTML += `<p><strong>Error:</strong> ${error.message}</p>`;
+                chatHistoryDiv.querySelector('.loader').remove();
+                chatHistoryDiv.innerHTML += `<p><strong>Error:</strong> ${error.message}</p>`;
                 console.error('Error details:', error);
             } finally {
                 sendButton.disabled = false;
-                chatHistory.scrollTop = chatHistory.scrollHeight;
+                chatHistoryDiv.scrollTop = chatHistoryDiv.scrollHeight;
             }
         }
     </script>
