@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Personal Trainer - v1.17</title> <!-- Changed header text to indicate difference -->
+    <title>AI Personal Trainer - v1.18</title> <!-- Changed header text to indicate difference -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -93,7 +93,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>AI Personal Trainer - v1.17</h1> <!-- Changed header text to indicate difference -->
+        <h1>AI Personal Trainer - v1.18</h1> <!-- Changed header text to indicate difference -->
         <p>Chat with your AI fitness coach for workout advice, tips, and personalized fitness plans!</p>
         <input type="text" id="userMessage" placeholder="Enter your message">
         <button id="sendButton" onclick="sendMessage()">Send</button>
@@ -104,7 +104,7 @@
         const apiKey = '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'; // Your Hugging Face API key
         const endpoint = 'https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct'; // Free model endpoint
 
-        async function sendMessage(retries = 0) {
+        async function sendMessage() {
             const userMessage = document.getElementById('userMessage').value;
             const sendButton = document.getElementById('sendButton');
             const responseDiv = document.getElementById('response');
@@ -142,15 +142,13 @@
                 console.log('Response data:', data);
 
                 if (!response.ok) {
-                    if (data.error && data.error.includes("loading") && retries < maxRetries) {
-                        console.warn(`Model is loading, retrying in ${retryDelay / 1000} seconds...`);
-                        setTimeout(() => sendMessage(retries + 1), retryDelay);
-                        return;
+                    if (data.error && data.error.includes("loading")) {
+                        throw new Error(`Model is loading: ${data.error}`);
                     }
                     throw new Error(`Network response was not ok: ${response.statusText}, Details: ${JSON.stringify(data)}`);
                 }
 
-                const generatedText = data.generated_text || 'No response text';
+                const generatedText = data[0]?.generated_text || 'No response text';
                 console.log('Generated text:', generatedText);
 
                 const assistantResponse = generatedText.split('Assistant:')[1]?.trim() || generatedText;
