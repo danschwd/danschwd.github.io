@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Personal Trainer - v1.23</title> <!-- Changed header text to indicate difference -->
+    <title>AI Personal Trainer - v1.24</title> <!-- Changed header text to indicate difference -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -23,79 +23,77 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             max-width: 500px;
             width: 100%;
-            text-align: center.
+            text-align: center;
         }
         h1 {
             font-size: 2em;
-            margin-bottom: 20px.
-            color: #333.
+            margin-bottom: 20px;
+            color: #333;
         }
         p {
-            margin-bottom: 20px.
-            color: #666.
+            margin-bottom: 20px;
+            color: #666;
         }
         input {
-            width: 100%.
-            padding: 15px.
-            margin: 10px 0.
-            border: 1px solid #ddd.
-            border-radius: 5px.
-            font-size: 16px.
-            box-sizing: border-box.
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
         }
         button {
-            width: 100%.
-            padding: 15px.
-            margin: 10px 0.
-            border: none.
-            border-radius: 5px.
-            background-color: #007BFF.
-            color: #fff.
-            font-size: 16px.
-            font-weight: bold.
-            cursor: pointer.
-            transition: background-color 0.3s ease.
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
         button:hover {
-            background-color: #0056b3.
+            background-color: #0056b3;
         }
         button:disabled {
-            background-color: #ccc.
-            cursor: not-allowed.
+            background-color: #ccc;
+            cursor: not-allowed;
         }
         #response {
-            margin-top: 20px.
-            padding: 20px.
-            border: 1px solid #ddd.
-            border-radius: 5px.
-            background-color: #f9f9f9.
-            min-height: 50px.
-            color: #333.
-            text-align: left.
-            white-space: pre-wrap.
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            min-height: 50px;
+            color: #333;
+            text-align: left;
+            white-space: pre-wrap;
         }
         .loader {
-            border: 4px solid #f3f3f3.
-            border-top: 4px solid #007BFF.
-            border-radius: 50%.
-            width: 24px.
-            height: 24px.
-            animation: spin 1s linear infinite.
-            display: inline-block.
-            margin-left: 10px.
-            vertical-align: middle.
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007BFF;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-left: 10px;
+            vertical-align: middle;
         }
         @keyframes spin {
-            0% { transform: rotate(0deg).
-            }
-            100% { transform: rotate(360deg).
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>AI Personal Trainer - v1.23</h1> <!-- Changed header text to indicate difference -->
+        <h1>AI Personal Trainer - v1.24</h1> <!-- Changed header text to indicate difference -->
         <p>Chat with your AI fitness coach for workout advice, tips, and personalized fitness plans!</p>
         <input type="text" id="userMessage" placeholder="Enter your message">
         <button id="sendButton" onclick="sendMessage()">Send</button>
@@ -107,24 +105,25 @@
         const endpoint = 'https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill'; // New model endpoint
 
         async function sendMessage() {
-            const userMessage = document.getElementById('userMessage').value.
-            const sendButton = document.getElementById('sendButton').
-            const responseDiv = document.getElementById('response').
+            const userMessage = document.getElementById('userMessage').value;
+            const sendButton = document.getElementById('sendButton');
+            const responseDiv = document.getElementById('response');
 
             if (!userMessage.trim()) {
-                alert("Please enter a message.") return.
+                alert("Please enter a message.");
+                return;
             }
 
-            sendButton.disabled = true.
-            responseDiv.innerHTML = '<span class="loader"></span>'.
+            sendButton.disabled = true;
+            responseDiv.innerHTML = '<span class="loader"></span>';
 
             const payload = {
                 inputs: `You are a fitness assistant. Answer as briefly as possible.\n\nUser: ${userMessage}\nAssistant:`,
                 parameters: { truncation: 'only_first' },
                 max_length: 2000
-            }.
+            };
 
-            console.log('Request payload:', payload).
+            console.log('Request payload:', payload);
 
             try {
                 const response = await fetch(endpoint, {
@@ -134,36 +133,36 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(payload)
-                }).
+                });
 
-                console.log('Response status:', response.status).
-                console.log('Response headers:', [...response.headers.entries()]):
+                console.log('Response status:', response.status);
+                console.log('Response headers:', [...response.headers.entries()]);
 
-                const data = await response.json().
-                console.log('Response data:', data).
+                const data = await response.json();
+                console.log('Response data:', data);
 
                 if (!response.ok) {
                     if (data.error && data.error.includes("loading")) {
-                        throw new Error(`Model is loading: ${data.error}`)
+                        throw new Error(`Model is loading: ${data.error}`);
                     }
-                    throw new Error(`Network response was not ok: ${response.statusText}, Details: ${JSON.stringify(data)}`)
+                    throw new Error(`Network response was not ok: ${response.statusText}, Details: ${JSON.stringify(data)}`);
                 }
 
-                const generatedText = data.generated_text || 'No response text'.
-                console.log('Generated text:', generatedText).
+                const generatedText = data.generated_text || 'No response text';
+                console.log('Generated text:', generatedText);
 
-                const assistantResponse = generatedText.split('Assistant:')[1]?.trim() || generatedText.
-                console.log('Assistant response:', assistantResponse).
+                const assistantResponse = generatedText.split('Assistant:')[1]?.trim() || generatedText;
+                console.log('Assistant response:', assistantResponse);
 
-                responseDiv.innerText = assistantResponse.
+                responseDiv.innerText = assistantResponse;
             } catch (error) {
-                responseDiv.innerText = 'Error: ' + error.message.
-                console.error('Error details:', error).
+                responseDiv.innerText = 'Error: ' + error.message;
+                console.error('Error details:', error);
             } finally {
-                sendButton.disabled = false.
-                const loader = responseDiv.querySelector('.loader').
+                sendButton.disabled = false;
+                const loader = responseDiv.querySelector('.loader');
                 if (loader) {
-                    loader.remove().
+                    loader.remove();
                 }
             }
         }
