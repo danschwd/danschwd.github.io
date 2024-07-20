@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Personal Trainer - v2.0</title>
+    <title>AI Personal Trainer - v2.1</title> <!-- Changed header text to indicate difference -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -56,13 +56,15 @@
         #homeScreen {
             display: block;
         }
-        #response {
+        #chatHistory {
             margin-top: 20px;
             padding: 20px;
             border: 1px solid #ddd;
             border-radius: 5px;
             background-color: #f9f9f9;
-            min-height: 50px;
+            min-height: 200px;
+            max-height: 300px;
+            overflow-y: auto;
             color: #333;
             text-align: left;
             white-space: pre-wrap;
@@ -86,7 +88,7 @@
 </head>
 <body>
     <div class="container" id="homeScreen" class="screen">
-        <h1>AI Personal Trainer - v2.0</h1>
+        <h1>AI Personal Trainer - v2.1</h1>
         <button onclick="showScreen('chatScreen')">Start Chat</button>
         <button onclick="showScreen('workoutsScreen')">My Workouts</button>
         <button onclick="showScreen('nutritionScreen')">Nutrition Advice</button>
@@ -96,9 +98,9 @@
 
     <div class="container screen" id="chatScreen">
         <h1>Chat with Your AI Trainer</h1>
+        <div id="chatHistory"></div>
         <input type="text" id="userMessage" placeholder="Enter your message">
         <button id="sendButton" onclick="sendMessage()">Send</button>
-        <div id="response"></div>
         <button onclick="showScreen('homeScreen')">Back to Home</button>
     </div>
 
@@ -141,7 +143,7 @@
         async function sendMessage() {
             const userMessage = document.getElementById('userMessage').value;
             const sendButton = document.getElementById('sendButton');
-            const responseDiv = document.getElementById('response');
+            const chatHistory = document.getElementById('chatHistory');
 
             if (!userMessage.trim()) {
                 alert("Please enter a message.");
@@ -149,7 +151,7 @@
             }
 
             sendButton.disabled = true;
-            responseDiv.innerHTML = '<span class="loader"></span>';
+            chatHistory.innerHTML += `<p><strong>You:</strong> ${userMessage}</p><span class="loader"></span>`;
 
             const payload = {
                 model: 'command-xlarge-nightly',
@@ -186,16 +188,15 @@
                 const generatedText = data.text || 'No response text';
                 console.log('Generated text:', generatedText);
 
-                responseDiv.innerText = generatedText.trim();
+                chatHistory.querySelector('.loader').remove();
+                chatHistory.innerHTML += `<p><strong>AI:</strong> ${generatedText.trim()}</p>`;
             } catch (error) {
-                responseDiv.innerText = 'Error: ' + error.message;
+                chatHistory.querySelector('.loader').remove();
+                chatHistory.innerHTML += `<p><strong>Error:</strong> ${error.message}</p>`;
                 console.error('Error details:', error);
             } finally {
                 sendButton.disabled = false;
-                const loader = responseDiv.querySelector('.loader');
-                if (loader) {
-                    loader.remove();
-                }
+                chatHistory.scrollTop = chatHistory.scrollHeight;
             }
         }
     </script>
