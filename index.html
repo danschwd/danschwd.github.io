@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Personal Trainer - Updated</title> <!-- Changed header text to indicate difference -->
+    <title>AI Personal Trainer - v1.02</title> <!-- Changed header text to indicate difference -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -64,7 +64,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>AI Personal Trainer - v1.01 </h1> <!-- Changed header text to indicate difference -->
+        <h1>AI Personal Trainer - v1.02</h1> <!-- Changed header text to indicate difference -->
         <p>Chat with your AI fitness coach for workout advice, tips, and personalized fitness plans!</p>
         <div>
             <input type="text" id="userMessage" placeholder="Enter your message">
@@ -101,7 +101,8 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        inputs: `${systemPrompt}\n\nUser: ${userMessage}\nAssistant:`
+                        inputs: `${systemPrompt}\n\nUser: ${userMessage}\nAssistant:`,
+                        parameters: { truncation: 'only_first' }
                     })
                 });
 
