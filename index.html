@@ -64,7 +64,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>AI Personal Trainer - v1.0</h1> <!-- Changed header text to indicate difference -->
+        <h1>AI Personal Trainer - v1.01 </h1> <!-- Changed header text to indicate difference -->
         <p>Chat with your AI fitness coach for workout advice, tips, and personalized fitness plans!</p>
         <div>
             <input type="text" id="userMessage" placeholder="Enter your message">
@@ -77,8 +77,10 @@
         const apiKey = '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'; // Your Hugging Face API key
         const endpoint = 'https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill'; // Free model endpoint
         const systemPrompt = `You are an extremely friendly and knowledgeable fitness assistant with PhD-level expertise in fitness, health, wellness, and nutrition. You are ready to help users achieve their fitness goals in any language, ensuring accessibility for everyone. Start every conversation as if you are engaging with a client, eager to help and support their journey towards better health. Provide accurate and reliable advice that is easy to understand for a lay audience. Communicate in a friendly tone and always give the best possible response with the given information.`;
+        const maxRetries = 5;
+        const retryDelay = 5000; // 5 seconds
 
-        async function sendMessage() {
+        async function sendMessage(retries = 0) {
             const userMessage = document.getElementById('userMessage').value;
             const sendButton = document.getElementById('sendButton');
             const responseDiv = document.getElementById('response');
@@ -104,8 +106,13 @@
                 });
 
                 if (!response.ok) {
-                    const errorDetails = await response.text();
-                    throw new Error(`Network response was not ok: ${response.statusText}, Details: ${errorDetails}`);
+                    const errorDetails = await response.json();
+                    if (errorDetails.error && errorDetails.error.includes("loading") && retries < maxRetries) {
+                        console.warn(`Model is loading, retrying in ${retryDelay / 1000} seconds...`);
+                        setTimeout(() => sendMessage(retries + 1), retryDelay);
+                        return;
+                    }
+                    throw new Error(`Network response was not ok: ${response.statusText}, Details: ${JSON.stringify(errorDetails)}`);
                 }
 
                 const data = await response.json();
