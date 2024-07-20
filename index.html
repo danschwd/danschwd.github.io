@@ -65,7 +65,7 @@
 <body>
     <div class="container">
         <h1>AI Personal Trainer</h1>
-        <p>Chat with your AI fitness coach for workout advice, tips, and personalized fitness plans now!</p>
+        <p>Chat with your AI fitness coach for workout advice, tips, and personalized fitness plans!</p>
         <div>
             <input type="text" id="userMessage" placeholder="Enter your message">
             <button id="sendButton" onclick="sendMessage()">Send</button>
@@ -74,8 +74,9 @@
     </div>
 
     <script>
-        const apiKey = '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'; // Your Hugging Face API key
-        const endpoint = 'https://api-inference.huggingface.co/models/chat/assistant/669b1520a12be7a7aa363507'; // Hugging Face assistant endpoint
+        const apiKey = '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'; // Your Hugging Face API key
+        const endpoint = 'https://api-inference.huggingface.co/models/CohereForAI/c4ai-command-r-plus'; // Correct API endpoint for the model
+        const systemPrompt = `You are an extremely friendly and knowledgeable fitness assistant with PhD-level expertise in fitness, health, wellness, and nutrition. You are ready to help users achieve their fitness goals in any language, ensuring accessibility for everyone. Start every conversation as if you are engaging with a client, eager to help and support their journey towards better health. Provide accurate and reliable advice that is easy to understand for a lay audience. Communicate in a friendly tone and always give the best possible response with the given information.`;
 
         async function sendMessage() {
             const userMessage = document.getElementById('userMessage').value;
@@ -97,7 +98,9 @@
                         'Authorization': `Bearer ${apiKey}`,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ inputs: userMessage })
+                    body: JSON.stringify({
+                        inputs: `${systemPrompt}\n\nUser: ${userMessage}\nAssistant:`
+                    })
                 });
 
                 if (!response.ok) {
