@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Personal Trainer - v1.26</title> <!-- Changed header text to indicate difference -->
+    <title>AI Personal Trainer - v1.28</title> <!-- Changed header text to indicate difference -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -93,7 +93,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>AI Personal Trainer - v1.26</h1> <!-- Changed header text to indicate difference -->
+        <h1>AI Personal Trainer - v1.28</h1> <!-- Changed header text to indicate difference -->
         <p>Chat with your AI fitness coach for workout advice, tips, and personalized fitness plans!</p>
         <input type="text" id="userMessage" placeholder="Enter your message">
         <button id="sendButton" onclick="sendMessage()">Send</button>
@@ -101,8 +101,9 @@
     </div>
 
     <script>
-        const apiKey = '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'; // Your Hugging Face API key
-        const endpoint = 'https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct'; // Using previously working model
+        const apiKey = 'AoCm86fzgwt3KDA9ynp7LHhthLFixBH0f2T3ni8V'; // Your Cohere API key
+        const endpoint = 'https://api.cohere.ai/generate'; // Cohere generate endpoint
+        const preamble = `You are an extremely friendly and knowledgeable fitness assistant, dedicated to helping users achieve their fitness goals. You engage with users in any language, ensuring accessibility for everyone. With PhD-level expertise in fitness, health, wellness, and nutrition, you provide accurate and reliable advice. You start every conversation as if you are engaging with a client, eager to help and support their journey towards better health. All information you provide should be easy to understand for a lay audience. You communicate in a friendly tone and always offer the best possible response with the given information.`;
 
         async function sendMessage() {
             const userMessage = document.getElementById('userMessage').value;
@@ -118,9 +119,13 @@
             responseDiv.innerHTML = '<span class="loader"></span>';
 
             const payload = {
-                inputs: `You are a fitness assistant. Answer as briefly as possible.\n\nUser: ${userMessage}\nAssistant:`,
-                parameters: { truncation: 'only_first' },
-                max_length: 2000
+                model: 'xlarge',
+                prompt: `${preamble}\n\nUser: ${userMessage}\nAssistant:`,
+                max_tokens: 300, // Adjust token count as needed
+                temperature: 0.7,
+                k: 0,
+                p: 0.75,
+                stop_sequences: ["\n"]
             };
 
             console.log('Request payload:', payload);
@@ -142,19 +147,13 @@
                 console.log('Response data:', data);
 
                 if (!response.ok) {
-                    if (data.error && data.error.includes("loading")) {
-                        throw new Error(`Model is loading: ${data.error}`);
-                    }
                     throw new Error(`Network response was not ok: ${response.statusText}, Details: ${JSON.stringify(data)}`);
                 }
 
-                const generatedText = data?.[0]?.generated_text || 'No response text';
+                const generatedText = data.generations[0]?.text || 'No response text';
                 console.log('Generated text:', generatedText);
 
-                const assistantResponse = generatedText.split('Assistant:')[1]?.trim() || generatedText;
-                console.log('Assistant response:', assistantResponse);
-
-                responseDiv.innerText = assistantResponse;
+                responseDiv.innerText = generatedText.trim();
             } catch (error) {
                 responseDiv.innerText = 'Error: ' + error.message;
                 console.error('Error details:', error);
