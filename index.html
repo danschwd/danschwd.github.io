@@ -74,7 +74,7 @@
     </div>
 
     <script>
-        const apiKey = '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'; // Your Hugging Face API key
+        const apiKey = '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'; // Your Hugging Face API key
         const endpoint = 'https://api-inference.huggingface.co/models/chat/assistant/669b1520a12be7a7aa363507'; // Hugging Face assistant endpoint
 
         async function sendMessage() {
@@ -101,15 +101,18 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    const errorDetails = await response.text();
+                    throw new Error(`Network response was not ok: ${response.statusText}, Details: ${errorDetails}`);
                 }
 
                 const data = await response.json();
-                responseDiv.innerText = data.generated_text;
+                responseDiv.innerText = data.generated_text || data.error || 'No response text';
             } catch (error) {
                 responseDiv.innerText = 'Error: ' + error.message;
+                console.error('Error details:', error);
             } finally {
                 sendButton.disabled = false;
+                responseDiv.querySelector('.loader').remove();
             }
         }
     </script>
