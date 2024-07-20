@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Personal Trainer - v1.18</title> <!-- Changed header text to indicate difference -->
+    <title>AI Personal Trainer - v1.19</title> <!-- Changed header text to indicate difference -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -93,7 +93,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>AI Personal Trainer - v1.18</h1> <!-- Changed header text to indicate difference -->
+        <h1>AI Personal Trainer - v1.19</h1> <!-- Changed header text to indicate difference -->
         <p>Chat with your AI fitness coach for workout advice, tips, and personalized fitness plans!</p>
         <input type="text" id="userMessage" placeholder="Enter your message">
         <button id="sendButton" onclick="sendMessage()">Send</button>
@@ -120,7 +120,7 @@
             const payload = {
                 inputs: `You are a fitness assistant. Answer as briefly as possible.\n\nUser: ${userMessage}\nAssistant:`,
                 parameters: { truncation: 'only_first' },
-                max_length: 2000
+                max_length: 3000 // Increased max_length to 3000
             };
 
             console.log('Request payload:', payload);
@@ -148,7 +148,7 @@
                     throw new Error(`Network response was not ok: ${response.statusText}, Details: ${JSON.stringify(data)}`);
                 }
 
-                const generatedText = data[0]?.generated_text || 'No response text';
+                const generatedText = data.generated_text || 'No response text';
                 console.log('Generated text:', generatedText);
 
                 const assistantResponse = generatedText.split('Assistant:')[1]?.trim() || generatedText;
