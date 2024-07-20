@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Personal Trainer - v1.06</title> <!-- Changed header text to indicate difference -->
+    <title>AI Personal Trainer - v1.07</title> <!-- Changed header text to indicate difference -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -64,7 +64,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>AI Personal Trainer - v1.06</h1> <!-- Changed header text to indicate difference -->
+        <h1>AI Personal Trainer - v1.07</h1> <!-- Changed header text to indicate difference -->
         <p>Chat with your AI fitness coach for workout advice, tips, and personalized fitness plans!</p>
         <div>
             <input type="text" id="userMessage" placeholder="Enter your message">
@@ -95,7 +95,8 @@
 
             const payload = {
                 inputs: `${systemPrompt}\n\nUser: ${userMessage}\nAssistant:`,
-                parameters: { truncation: 'only_first' }
+                parameters: { truncation: 'only_first' },
+                max_length: 2000
             };
 
             console.log('Request payload:', payload);
@@ -110,18 +111,21 @@
                     body: JSON.stringify(payload)
                 });
 
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+
+                const data = await response.json();
+                console.log('Response data:', data);
+
                 if (!response.ok) {
-                    const errorDetails = await response.json();
-                    if (errorDetails.error && errorDetails.error.includes("loading") && retries < maxRetries) {
+                    if (data.error && data.error.includes("loading") && retries < maxRetries) {
                         console.warn(`Model is loading, retrying in ${retryDelay / 1000} seconds...`);
                         setTimeout(() => sendMessage(retries + 1), retryDelay);
                         return;
                     }
-                    throw new Error(`Network response was not ok: ${response.statusText}, Details: ${JSON.stringify(errorDetails)}`);
+                    throw new Error(`Network response was not ok: ${response.statusText}, Details: ${JSON.stringify(data)}`);
                 }
 
-                const data = await response.json();
-                console.log('Response data:', data);
                 responseDiv.innerText = data.generated_text || 'No response text';
             } catch (error) {
                 responseDiv.innerText = 'Error: ' + error.message;
