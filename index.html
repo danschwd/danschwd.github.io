@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Personal Trainer - v2.8</title> <!-- Changed header text to indicate difference -->
+    <title>AI Personal Trainer - v2.9</title> <!-- Changed header text to indicate difference -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -88,7 +88,7 @@
 </head>
 <body>
     <div class="container" id="homeScreen" class="screen">
-        <h1>AI Personal Trainer - v2.8</h1>
+        <h1>AI Personal Trainer - v2.9</h1>
         <button onclick="showScreen('chatScreen')">Start Chat</button>
         <button onclick="showScreen('workoutsScreen')">My Workouts</button>
         <button onclick="showScreen('nutritionScreen')">Nutrition Advice</button>
@@ -215,7 +215,7 @@
 
             // Check if AI needs to ask follow-up questions
             if (generatedText.includes("I'd like to ask you a few questions")) {
-                sendFollowUpQuestions();
+                await sendFollowUpQuestions();
             }
         } catch (error) {
             chatHistoryDiv.querySelector('.loader').remove();
